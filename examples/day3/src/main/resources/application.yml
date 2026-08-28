@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: day3-in-memory-catalog
+catalog:
+  name: Day 3 Book Catalog
+  max-results: 50
+  report-delay: 60000
+management.endpoints.web.exposure.include: health,info
