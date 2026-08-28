@@ -58,3 +58,13 @@ Key annotations include `@Entity`, `@Id`, `@GeneratedValue`, `@Column`, `@Versio
 3. Use the H2 console to inspect `books` and `flyway_schema_history`.
 4. Explain why `ddl-auto=validate` catches drift and why `open-in-view=false` keeps persistence work in the service boundary.
 5. Switch to the PostgreSQL profile without changing Java code.
+
+## Import the Requestly collection
+
+1. Start Day 4 with either the default H2 configuration or the PostgreSQL profile.
+2. Open Requestly Desktop and its API Client.
+3. Select **Import → Postman**.
+4. Upload [`requestly-collection.json`](requestly-collection.json).
+5. Open the imported **Spring Training - Day 4 JPA API** collection.
+
+The collection uses `baseUrl=http://localhost:8080` and `bookId=1`. Edit these collection variables if the server port or target record changes. The same requests work with H2 and PostgreSQL because the active database profile does not change the REST API.

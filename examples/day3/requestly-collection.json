@@ -1,0 +1,94 @@
+{
+  "info": {
+    "_postman_id": "e5276633-3306-4ecb-a461-7fe74aa58b41",
+    "name": "Spring Training - Day 3 In-Memory API",
+    "description": "Requests for the database-free Day 3 Book Catalog API. Start Day 3 before sending requests.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "bookId", "value": "1" }
+  ],
+  "item": [
+    {
+      "name": "Read operations",
+      "item": [
+        {
+          "name": "List all books",
+          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/api/books", "description": "Returns all books, limited by catalog.max-results." }
+        },
+        {
+          "name": "Filter books by title",
+          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/api/books?title=java", "description": "Demonstrates @RequestParam with case-insensitive filtering." }
+        },
+        {
+          "name": "Get book by ID",
+          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/api/books/{{bookId}}", "description": "Demonstrates @PathVariable." }
+        },
+        {
+          "name": "Get welcome message",
+          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/api/books/welcome", "description": "Shows the greeting selected through Spring bean configuration." }
+        },
+        {
+          "name": "Get missing book - expect 404",
+          "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/api/books/99999", "description": "Demonstrates @ResponseStatus on BookNotFoundException." }
+        }
+      ]
+    },
+    {
+      "name": "Write operations",
+      "item": [
+        {
+          "name": "Create book",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"isbn\": \"9780321356680\",\n  \"title\": \"Effective Java, Second Edition\",\n  \"author\": \"Joshua Bloch\",\n  \"price\": 39.99\n}", "options": { "raw": { "language": "json" } } },
+            "url": "{{baseUrl}}/api/books",
+            "description": "Creates an in-memory book and returns 201 Created. Copy its id into the bookId collection variable if needed."
+          }
+        },
+        {
+          "name": "Update book",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"isbn\": \"9780134685991\",\n  \"title\": \"Effective Java - Updated\",\n  \"author\": \"Joshua Bloch\",\n  \"price\": 51.90\n}", "options": { "raw": { "language": "json" } } },
+            "url": "{{baseUrl}}/api/books/{{bookId}}"
+          }
+        },
+        {
+          "name": "Delete book",
+          "request": { "method": "DELETE", "header": [], "url": "{{baseUrl}}/api/books/{{bookId}}", "description": "Returns 204 No Content." }
+        }
+      ]
+    },
+    {
+      "name": "Validation and errors",
+      "item": [
+        {
+          "name": "Create invalid book - expect 400",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"isbn\": \"bad\",\n  \"title\": \"\",\n  \"author\": \"\",\n  \"price\": 0\n}", "options": { "raw": { "language": "json" } } },
+            "url": "{{baseUrl}}/api/books"
+          }
+        },
+        {
+          "name": "Create duplicate ISBN - expect 409",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"isbn\": \"9780134685991\",\n  \"title\": \"Duplicate Example\",\n  \"author\": \"Training User\",\n  \"price\": 25.00\n}", "options": { "raw": { "language": "json" } } },
+            "url": "{{baseUrl}}/api/books"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Actuator health",
+      "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/actuator/health" }
+    }
+  ]
+}

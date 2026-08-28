@@ -1,0 +1,73 @@
+{
+  "info": {
+    "_postman_id": "94436ccc-d33c-4c3c-9c85-5bff7c5966cb",
+    "name": "Spring Training - Day 4 JPA API",
+    "description": "Requests for the Day 4 Book Catalog API backed by H2 by default or PostgreSQL with the postgres profile.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "bookId", "value": "1" }
+  ],
+  "item": [
+    {
+      "name": "Read operations",
+      "item": [
+        { "name": "List all books", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/api/books" } },
+        { "name": "Search books by title", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/api/books?title=java", "description": "Runs a derived Spring Data JPA query." } },
+        { "name": "Get book by ID", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/api/books/{{bookId}}" } },
+        { "name": "Get missing book - expect 404", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/api/books/99999" } }
+      ]
+    },
+    {
+      "name": "Write operations",
+      "item": [
+        {
+          "name": "Create book",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"isbn\": \"9780321356680\",\n  \"title\": \"Effective Java, Second Edition\",\n  \"author\": \"Joshua Bloch\",\n  \"price\": 39.99\n}", "options": { "raw": { "language": "json" } } },
+            "url": "{{baseUrl}}/api/books",
+            "description": "Persists a book in the active database and returns 201 Created. Copy its id into bookId if needed."
+          }
+        },
+        {
+          "name": "Update book",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"isbn\": \"9780134685991\",\n  \"title\": \"Effective Java - Updated\",\n  \"author\": \"Joshua Bloch\",\n  \"price\": 51.90\n}", "options": { "raw": { "language": "json" } } },
+            "url": "{{baseUrl}}/api/books/{{bookId}}",
+            "description": "Updates the managed entity inside a transaction; Hibernate dirty checking issues the SQL update."
+          }
+        },
+        { "name": "Delete book", "request": { "method": "DELETE", "header": [], "url": "{{baseUrl}}/api/books/{{bookId}}", "description": "Deletes in a service-layer transaction and returns 204." } }
+      ]
+    },
+    {
+      "name": "Validation and errors",
+      "item": [
+        {
+          "name": "Create invalid book - expect 400",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"isbn\": \"bad\",\n  \"title\": \"\",\n  \"author\": \"\",\n  \"price\": 0\n}", "options": { "raw": { "language": "json" } } },
+            "url": "{{baseUrl}}/api/books"
+          }
+        },
+        {
+          "name": "Create duplicate ISBN - expect 409",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"isbn\": \"9780134685991\",\n  \"title\": \"Duplicate Example\",\n  \"author\": \"Training User\",\n  \"price\": 25.00\n}", "options": { "raw": { "language": "json" } } },
+            "url": "{{baseUrl}}/api/books"
+          }
+        }
+      ]
+    },
+    { "name": "Actuator health", "request": { "method": "GET", "header": [], "url": "{{baseUrl}}/actuator/health" } }
+  ]
+}

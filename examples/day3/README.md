@@ -45,3 +45,13 @@ Here `@Repository` marks a logical data-access boundary; it does not mean a data
 5. Compare the default and `training` profile greetings, then inspect lifecycle, scheduled, and asynchronous logs.
 
 All state is process-local. Restarting the application restores only the seeded book.
+
+## Import the Requestly collection
+
+1. Start the Day 3 application.
+2. Open Requestly Desktop and its API Client.
+3. Select **Import → Postman**.
+4. Upload [`requestly-collection.json`](requestly-collection.json).
+5. Open the imported **Spring Training - Day 3 In-Memory API** collection.
+
+The collection uses `baseUrl=http://localhost:8080` and `bookId=1`. Both values can be edited in the collection variables. Run write requests individually because deleting or changing book `1` affects later requests until the application restarts.
