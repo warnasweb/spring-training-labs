@@ -3,3 +3,17 @@ target/
 *.iml
 .DS_Store
 data/
+examples/day3/.classpath
+examples/day3/.project
+examples/day3/.settings/org.eclipse.core.resources.prefs
+examples/day3/.settings/org.eclipse.jdt.apt.core.prefs
+examples/day3/.settings/org.eclipse.jdt.core.prefs
+examples/day3/.settings/org.eclipse.m2e.core.prefs
+examples/day3/.settings/org.springframework.ide.eclipse.prefs
+examples/day4/.classpath
+examples/day4/.project
+examples/day4/.settings/org.eclipse.core.resources.prefs
+examples/day4/.settings/org.eclipse.jdt.apt.core.prefs
+examples/day4/.settings/org.eclipse.jdt.core.prefs
+examples/day4/.settings/org.eclipse.m2e.core.prefs
+examples/day4/.settings/org.springframework.ide.eclipse.prefs
