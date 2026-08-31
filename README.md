@@ -1,11 +1,12 @@
 # Spring Training Labs
 
-Runnable examples for Spring Boot training. Both applications use the same Book Catalog REST API, making the Day 3 to Day 4 persistence change explicit.
+Runnable examples for Spring Boot training. The applications use the same Book Catalog REST API, making each day's evolution explicit.
 
 | Example | Storage | Focus |
 |---|---|---|
 | [`examples/day3`](examples/day3/README.md) | In-memory map; no database dependencies | Spring and Spring Boot annotations, configuration, validation, web, lifecycle, async and scheduling |
 | [`examples/day4`](examples/day4/README.md) | H2 by default; PostgreSQL profile available | JPA/Hibernate, repositories, transactions, Flyway and database profiles |
+| [`examples/day5`](examples/day5/README.md) | Day 4 database plus Caffeine cache | Spring AOP, advice and pointcuts, caching, cache coherence and proxy caveats |
 
 ## Requirements
 
