@@ -1,0 +1,4 @@
+server:
+  port: 8085
+training:
+  api-key: ${TRAINING_API_KEY:day6-demo-key}
