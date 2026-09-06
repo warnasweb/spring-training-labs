@@ -1,6 +1,6 @@
 # Spring Training Labs
 
-Runnable examples for Spring Boot training. The applications use the same Book Catalog REST API, making each day's evolution explicit.
+Runnable examples for Spring Boot training. Days 3–6 evolve a Book Catalog REST API; Day 7 introduces a separate e-commerce microservices system.
 
 | Example | Storage | Focus |
 |---|---|---|
@@ -9,10 +9,13 @@ Runnable examples for Spring Boot training. The applications use the same Book C
 | [`examples/day5`](examples/day5/README.md) | Day 4 database plus Caffeine cache | Spring AOP, advice and pointcuts, caching, cache coherence and proxy caveats |
 | [`examples/day6`](examples/day6/README.md) | Independent Book API security examples | HTTP Basic, form login, JDBC users, JWT, API keys and method security |
 
+| [`examples/day7`](examples/day7/README.md) | Five PostgreSQL databases and Kafka | Gateway, REST, resilience, Saga compensation, transactional outbox, idempotency and observability |
+
 ## Requirements
 
 - Java 21
-- Maven 3.6.3+
+- Maven 3.9+
+- Docker with Compose v2 for Day 7 and its PostgreSQL integration tests
 
 Verify everything from the repository root:
 

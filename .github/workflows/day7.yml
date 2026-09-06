@@ -1,0 +1,36 @@
+name: Day 7 microservices
+on:
+  push:
+    paths: ['examples/day7/**', '.github/workflows/day7.yml']
+  pull_request:
+    paths: ['examples/day7/**', '.github/workflows/day7.yml']
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    defaults:
+      run:
+        working-directory: examples/day7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+          cache: maven
+      - run: mvn -B clean verify -Plegacy-discovery
+      - run: docker compose --profile apps up --build -d
+      - run: python3 scripts/smoke.py
+      - if: always()
+        run: docker compose --profile apps logs --no-color > compose.log
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: day7-test-results
+          path: |
+            examples/day7/**/target/surefire-reports/
+            examples/day7/compose.log
+      - if: always()
+        run: docker compose --profile apps down -v
