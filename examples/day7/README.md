@@ -152,19 +152,34 @@ curl http://localhost:8083/actuator/metrics
 
 ## Test strategy
 
-`mvn test` runs unit tests and PostgreSQL Testcontainers examples. When Docker is absent, container tests are explicitly skipped; read the test summary rather than assuming database coverage passed. `mvn clean verify -Plegacy-discovery` also packages the optional server. `python3 scripts/smoke.py` is an independent full-stack test covering CRUD, successful payment, compensation, repeated order creation, conflicting keys, insufficient stock and notifications. CI runs the database tests with Docker available and then runs the full Compose smoke test.
+`mvn test` runs unit tests and PostgreSQL Testcontainers examples. When Docker is absent, container tests are explicitly skipped; read the test summary rather than assuming database coverage passed. `mvn clean verify` also packages the discovery server. `python3 scripts/smoke.py` is an independent full-stack test covering CRUD, successful payment, compensation, repeated order creation, conflicting keys, insufficient stock and notifications. CI runs the database tests with Docker available and then runs the full Compose smoke test.
 
 Unit tests cover Saga branches, failure propagation, payment event selection and event metadata. PostgreSQL tests exercise Flyway migrations, reservation replay, release replay and competing reservations. JDBC is chosen to expose SQL locking and transactions directly, building on the earlier JPA day without hiding the concurrency rules. No H2 substitution is used for PostgreSQL-specific locking.
 
-## Optional Eureka demonstration
+## Eureka demonstration
 
 ```bash
-mvn -Plegacy-discovery -pl discovery-server -am package
-java -jar discovery-server/target/discovery-server-1.0.0.jar
+docker compose -f docker-compose.yml -f docker-compose.discovery.yml --profile apps --profile discovery up --build -d
 # Open http://localhost:8761
 ```
 
-This is a registry-server-only illustration, isolated from the main lab. The six services deliberately do not register. As an exercise, add the Eureka client starter to two services, configure `eureka.client.serviceUrl.defaultZone`, add Spring Cloud LoadBalancer, and replace fixed URLs with service-name lookups. Do not expect `lb://` routes to work without those additions. Compose DNS already resolves service names inside its network. Kubernetes Service/DNS commonly provides discovery and load balancing, making an additional Eureka registry unnecessary. Multiple inventory replicas would still share only the inventory-owned database, while Kafka consumer groups distribute event processing.
+The normal lab uses Docker Compose DNS, so Eureka is disabled by default. The discovery override starts the Eureka server and sets `EUREKA_CLIENT_ENABLED=true` for the gateway and business services. Within about 30 seconds, the Eureka dashboard should show:
+
+- `API-GATEWAY`
+- `PRODUCT-SERVICE`
+- `INVENTORY-SERVICE`
+- `ORDER-SERVICE`
+- `PAYMENT-SERVICE`
+- `NOTIFICATION-SERVICE`
+
+The gateway and `order-service` still use explicit URLs for the main request flow. That keeps the code easier to teach while still showing service registration clearly. After the dashboard demo, compare this with Docker Compose service names such as `http://inventory-service:8082`. Kubernetes Service/DNS commonly provides the same kind of discovery and load balancing in production, which is why Eureka is often unnecessary in newer deployments.
+
+Run the same smoke test while Eureka is enabled:
+
+```bash
+python3 scripts/smoke.py
+docker compose -f docker-compose.yml -f docker-compose.discovery.yml --profile apps --profile discovery down -v
+```
 
 ## Teaching flow (about 150 minutes)
 
