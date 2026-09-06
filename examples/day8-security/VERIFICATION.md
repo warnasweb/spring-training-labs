@@ -8,7 +8,7 @@ Generated and checked on 2026-09-06.
   - Result: PASS
   - Modules: common, api-gateway, product-service, inventory-service, order-service, payment-service, notification-service, discovery-server
 
-- `docker compose -f docker-compose.yml -f docker-compose.discovery.yml --profile apps --profile discovery up --build -d`
+- `docker compose -f docker-compose.yml -f docker-compose.discovery.yml --profile apps --profile discovery --profile frontend up --build -d`
   - Result: PASS
 
 - `python3 scripts/smoke.py`
@@ -18,6 +18,14 @@ Generated and checked on 2026-09-06.
 - Manual gateway security check
   - `/products` without bearer token returned `401`
   - `/products` with bearer token returned `200` and the seeded product
+
+- Frontend build
+  - Command: `npm install && npm run build` from `examples/day8-security/frontend`
+  - Result: PASS
+
+- Frontend endpoint
+  - `http://localhost:5173` returned the React app HTML
+  - Result: PASS
 
 ## Notes
 

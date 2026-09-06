@@ -199,6 +199,15 @@ services:
       NOTIFICATION_URL: http://notification-service:8085
       JWT_SECRET: ${JWT_SECRET:-day8-training-secret-change-me-please}
       INTERNAL_SERVICE_TOKEN: ${INTERNAL_SERVICE_TOKEN:-day8-internal-service-token}
+
+  frontend:
+    profiles: ["frontend"]
+    build:
+      context: ./frontend
+    ports: ["127.0.0.1:5173:80"]
+    depends_on:
+      api-gateway:
+        condition: service_started
 volumes:
   kafka-data:
   product-data:

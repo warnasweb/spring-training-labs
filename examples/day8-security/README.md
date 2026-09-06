@@ -13,6 +13,7 @@ This example keeps the Day 7 e-commerce microservices system intact and adds a t
 | payment-service | 8184 | 8084 | 5536 | Kafka payment consumer |
 | notification-service | 8185 | 8085 | 5537 | Kafka notification consumer |
 | discovery-server | 8861 | 8761 | - | Eureka dashboard and registration demo |
+| frontend | 5173 | 80 | - | React UI that calls only the API Gateway |
 | kafka | 9192 | 9092 | - | `shop.events` event stream |
 
 The different host ports allow Day 7 and Day 8 to coexist on the same machine. Inside Docker, services still use the normal 8080-8085 ports.
@@ -47,6 +48,32 @@ ORDER-SERVICE
 PAYMENT-SERVICE
 NOTIFICATION-SERVICE
 ```
+
+## Frontend UI
+
+Start the backend plus React UI with Docker:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.discovery.yml --profile apps --profile discovery --profile frontend up --build -d
+```
+
+Open:
+
+```text
+http://localhost:5173
+```
+
+The UI demonstrates login, bearer-token API calls, product lookup, inventory lookup, order creation, Saga success, payment failure compensation, and payment/notification lookup. The frontend calls only the API Gateway.
+
+For local frontend development:
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+The Vite dev server proxies `/api` to `http://localhost:8180`.
 
 ## Test
 
@@ -115,7 +142,7 @@ Useful tables: `products`, `stock`, `reservations`, `orders`, `payments`, `notif
 ## Stop
 
 ```bash
-docker compose -f docker-compose.yml -f docker-compose.discovery.yml --profile apps --profile discovery down
+docker compose -f docker-compose.yml -f docker-compose.discovery.yml --profile apps --profile discovery --profile frontend down
 ```
 
 Use `down -v` only when you intentionally want to delete the PostgreSQL and Kafka volumes for this example.
@@ -129,4 +156,5 @@ Use `down -v` only when you intentionally want to delete the PostgreSQL and Kafk
 5. Explain why `order-service` uses `X-Internal-Token` for the scheduled Saga call to inventory.
 6. Run payment failure and show compensation still releases stock.
 7. Open Eureka at `http://localhost:8861` and show all secured services registered.
-8. Discuss production replacements: OAuth2/OIDC provider, resource server JWT validation, mTLS, API gateway policy, secret rotation, and method-level authorization.
+8. Open the frontend at `http://localhost:5173` and repeat the same flow visually.
+9. Discuss production replacements: OAuth2/OIDC provider, resource server JWT validation, mTLS, API gateway policy, secret rotation, and method-level authorization.
