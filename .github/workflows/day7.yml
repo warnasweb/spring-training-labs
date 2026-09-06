@@ -20,7 +20,7 @@ jobs:
           distribution: temurin
           java-version: '21'
           cache: maven
-      - run: mvn -B clean verify -Plegacy-discovery
+      - run: mvn -B clean verify
       - run: docker compose --profile apps up --build -d
       - run: python3 scripts/smoke.py
       - if: always()

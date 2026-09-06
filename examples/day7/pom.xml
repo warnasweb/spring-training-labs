@@ -23,6 +23,7 @@
     <module>order-service</module>
     <module>payment-service</module>
     <module>notification-service</module>
+    <module>discovery-server</module>
   </modules>
   <dependencyManagement>
     <dependencies>
@@ -42,12 +43,4 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
-  <profiles>
-    <profile>
-      <id>legacy-discovery</id>
-      <modules>
-        <module>discovery-server</module>
-      </modules>
-    </profile>
-  </profiles>
 </project>
