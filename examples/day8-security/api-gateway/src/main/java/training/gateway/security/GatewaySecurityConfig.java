@@ -12,6 +12,9 @@ import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.reactive.CorsConfigurationSource;
+import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 import org.springframework.web.server.WebFilter;
 import reactor.core.publisher.Mono;
 
@@ -21,11 +24,24 @@ public class GatewaySecurityConfig {
   @Bean
   SecurityWebFilterChain gatewaySecurity(ServerHttpSecurity http, WebFilter gatewayJwtFilter) {
     return http.csrf(ServerHttpSecurity.CsrfSpec::disable)
+        .cors(cors -> cors.configurationSource(corsConfigurationSource()))
         .authorizeExchange(auth -> auth
             .pathMatchers("/auth/token", "/actuator/health/**", "/actuator/prometheus").permitAll()
             .anyExchange().authenticated())
         .addFilterAt(gatewayJwtFilter, SecurityWebFiltersOrder.AUTHENTICATION)
         .build();
+  }
+
+  @Bean
+  CorsConfigurationSource corsConfigurationSource() {
+    var cors = new CorsConfiguration();
+    cors.addAllowedOrigin("http://localhost:5173");
+    cors.addAllowedMethod("*");
+    cors.addAllowedHeader("*");
+    cors.addExposedHeader("X-Correlation-ID");
+    var source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", cors);
+    return source;
   }
   @Bean
   WebFilter gatewayJwtFilter(@Value("${security.jwt.secret}") String secret) {
