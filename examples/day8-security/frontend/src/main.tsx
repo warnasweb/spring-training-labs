@@ -33,24 +33,25 @@ function App() {
 
   const authHeader = useMemo(() => token ? { Authorization: `Bearer ${token}` } : {}, [token]);
 
-  async function request<T>(path: string, options: RequestInit = {}): Promise<ApiResult<T>> {
+  async function request<T>(path: string, options: RequestInit & { skipAuth?: boolean } = {}): Promise<ApiResult<T>> {
     try {
       const headers = new Headers(options.headers);
       headers.set('Accept', 'application/json');
       if (options.body && !headers.has('Content-Type')) {
         headers.set('Content-Type', 'application/json');
       }
-      if (authHeader.Authorization) {
+      if (!options.skipAuth && authHeader.Authorization) {
         headers.set('Authorization', authHeader.Authorization);
       }
+      const { skipAuth, ...fetchOptions } = options;
       const response = await fetch(`${gatewayBase}${path}`, {
-        ...options,
+        ...fetchOptions,
         headers
       });
       const text = await response.text();
       const data = text ? JSON.parse(text) : null;
       if (!response.ok) {
-        return { ok: false, status: response.status, message: data?.message ?? data?.error ?? response.statusText };
+        return { ok: false, status: response.status, message: data?.message ?? data?.error ?? `${response.statusText} from ${gatewayBase}${path}` };
       }
       return { ok: true, data };
     } catch (error) {
@@ -74,6 +75,7 @@ function App() {
   async function login() {
     await run('Token request', () => request<{ accessToken: string }>('/auth/token', {
       method: 'POST',
+      skipAuth: true,
       body: JSON.stringify({ username, password })
     }), data => {
       setToken(data.accessToken);
