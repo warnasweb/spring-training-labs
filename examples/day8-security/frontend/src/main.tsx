@@ -13,8 +13,8 @@ type ApiResult<T> = { ok: true; data: T } | { ok: false; status: number; message
 const gatewayBase = import.meta.env.VITE_API_BASE ?? '/api';
 const seedProductId = '11111111-1111-1111-1111-111111111111';
 
-function newIdempotencyKey(prefix: string) {
-  return `${prefix}-${crypto.randomUUID()}`;
+function newCorrelationId(prefix: string, id: string) {
+  return `${prefix}-${id}`;
 }
 
 function App() {
@@ -92,10 +92,11 @@ function App() {
   }
 
   async function createOrder() {
-    const key = newIdempotencyKey(failPayment ? 'ui-fail' : 'ui-success');
+    const key = crypto.randomUUID();
+    const correlationId = newCorrelationId(failPayment ? 'ui-fail' : 'ui-success', key);
     await run('Create order', () => request<Order>('/orders', {
       method: 'POST',
-      headers: { 'Idempotency-Key': key, 'X-Correlation-ID': key },
+      headers: { 'Idempotency-Key': key, 'X-Correlation-ID': correlationId },
       body: JSON.stringify({ productId: seedProductId, quantity, failPayment })
     }), data => {
       setOrder(data);
