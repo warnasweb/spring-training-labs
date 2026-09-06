@@ -27,6 +27,12 @@ Generated and checked on 2026-09-06.
   - `http://localhost:5173` returned the React app HTML
   - Result: PASS
 
+- Focused frontend operations
+  - Product create/update/delete through the gateway: PASS
+  - Direct inventory reserve/release through the gateway: PASS
+  - Order cancel endpoint and compensation: PASS
+  - Payment failure with automatic payment/notification data available: PASS
+
 ## Notes
 
 The example uses a simple signed token and an internal service token for teaching. Keep it as a stepping stone before introducing a real authorization server such as Keycloak, Auth0, Okta, Cognito, or Spring Authorization Server.

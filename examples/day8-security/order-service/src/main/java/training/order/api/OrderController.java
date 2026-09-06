@@ -19,4 +19,14 @@ public class OrderController {
   return order;
  }
  @GetMapping("/{id}") public Map<String,Object> one(@PathVariable UUID id) { return db.queryForList("select * from orders where id=?",id).stream().findFirst().orElseThrow(()->new NoSuchElementException("Order not found")); }
+
+ @PostMapping("/{id}/cancel") @Transactional
+ public Map<String,Object> cancel(@PathVariable UUID id) {
+  var order=one(id);
+  String status=(String)order.get("status");
+  if(status.equals("CONFIRMED")) throw new IllegalStateException("Confirmed orders need a refund flow before cancellation");
+  if(status.equals("CANCELLED") || status.equals("REJECTED")) return order;
+  db.update("update orders set status='COMPENSATING',updated_at=now() where id=? and status in ('PENDING','AWAITING_PAYMENT','COMPENSATING')",id);
+  return one(id);
+ }
 }
