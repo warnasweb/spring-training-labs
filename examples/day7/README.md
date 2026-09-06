@@ -181,18 +181,6 @@ python3 scripts/smoke.py
 docker compose -f docker-compose.yml -f docker-compose.discovery.yml --profile apps --profile discovery down -v
 ```
 
-## Teaching flow (about 150 minutes)
-
-| Time | PPT concept | Code / exercise |
-|---|---|---|
-| 0–15 min | Monolith, boundaries, cohesion, database ownership | Architecture; explain why there are five databases and no shared entities |
-| 15–30 min | Contracts, gateway, external configuration | Start stack, Product CRUD, environment URLs, request validation |
-| 30–50 min | Synchronous REST, discovery, load balancing | Inspect InventoryClient, reservations, compare DNS and optional Eureka |
-| 50–70 min | Timeout, retry, circuit breaker, fallback | Stop inventory; observe PENDING and recovery; discuss retry amplification |
-| 70–95 min | Kafka, partitions, consumer groups, delivery | OrderCreated, separate Payment/Notification groups, stop/restart consumer |
-| 95–120 min | Eventual consistency, Saga, outbox, idempotency | Payment failure and compensation; replay outbox; identify crash windows |
-| 120–135 min | Observability, probes, operations | JSON logs, correlation IDs, metrics, database readiness |
-| 135–150 min | Tests, deployment, production trade-offs | Concurrency test, full smoke; discuss Kubernetes and security |
 
 ## Deliberate production boundaries and follow-up exercises
 
