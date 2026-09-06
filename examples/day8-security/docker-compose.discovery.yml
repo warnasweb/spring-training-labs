@@ -1,0 +1,56 @@
+services:
+  discovery-server:
+    profiles: ["discovery"]
+    build:
+      context: .
+      args:
+        SERVICE: discovery-server
+    ports: ["127.0.0.1:8861:8761"]
+
+  api-gateway:
+    environment:
+      EUREKA_CLIENT_ENABLED: "true"
+      EUREKA_DEFAULT_ZONE: http://discovery-server:8761/eureka/
+    depends_on:
+      discovery-server:
+        condition: service_started
+
+  product-service:
+    environment:
+      EUREKA_CLIENT_ENABLED: "true"
+      EUREKA_DEFAULT_ZONE: http://discovery-server:8761/eureka/
+    depends_on:
+      discovery-server:
+        condition: service_started
+
+  inventory-service:
+    environment:
+      EUREKA_CLIENT_ENABLED: "true"
+      EUREKA_DEFAULT_ZONE: http://discovery-server:8761/eureka/
+    depends_on:
+      discovery-server:
+        condition: service_started
+
+  order-service:
+    environment:
+      EUREKA_CLIENT_ENABLED: "true"
+      EUREKA_DEFAULT_ZONE: http://discovery-server:8761/eureka/
+    depends_on:
+      discovery-server:
+        condition: service_started
+
+  payment-service:
+    environment:
+      EUREKA_CLIENT_ENABLED: "true"
+      EUREKA_DEFAULT_ZONE: http://discovery-server:8761/eureka/
+    depends_on:
+      discovery-server:
+        condition: service_started
+
+  notification-service:
+    environment:
+      EUREKA_CLIENT_ENABLED: "true"
+      EUREKA_DEFAULT_ZONE: http://discovery-server:8761/eureka/
+    depends_on:
+      discovery-server:
+        condition: service_started
