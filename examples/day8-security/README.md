@@ -63,7 +63,7 @@ Open:
 http://localhost:5173
 ```
 
-The UI demonstrates login, bearer-token API calls, product lookup, inventory lookup, order creation, Saga success, payment failure compensation, and payment/notification lookup. The frontend calls only the API Gateway.
+The UI demonstrates login, bearer-token API calls, Product CRUD, inventory stock lookup, direct stock reserve/release, order creation, order cancellation, Saga success, payment failure compensation, and automatic payment/notification refresh. The frontend calls only the API Gateway.
 
 For local frontend development:
 
@@ -153,8 +153,11 @@ Use `down -v` only when you intentionally want to delete the PostgreSQL and Kafk
 2. Start Day 8 and show that `/products` returns 401 without a token.
 3. Issue a token from `/auth/token` and retry the same request successfully.
 4. Show that direct service endpoints also require authentication.
-5. Explain why `order-service` uses `X-Internal-Token` for the scheduled Saga call to inventory.
-6. Run payment failure and show compensation still releases stock.
-7. Open Eureka at `http://localhost:8861` and show all secured services registered.
-8. Open the frontend at `http://localhost:5173` and repeat the same flow visually.
-9. Discuss production replacements: OAuth2/OIDC provider, resource server JWT validation, mTLS, API gateway policy, secret rotation, and method-level authorization.
+5. Use the frontend Product CRUD section to show that Product owns product data while Inventory owns stock.
+6. Use direct reserve/release to explain idempotent inventory commands.
+7. Create a successful order and watch the UI auto-refresh order, payment and notification data.
+8. Create a failed-payment order and show Saga compensation releasing stock.
+9. Cancel an in-flight order and explain why confirmed-order cancellation would require a refund flow.
+10. Explain why `order-service` uses `X-Internal-Token` for the scheduled Saga call to inventory.
+11. Open Eureka at `http://localhost:8861` and show all secured services registered.
+12. Discuss production replacements: OAuth2/OIDC provider, resource server JWT validation, mTLS, API gateway policy, secret rotation, and method-level authorization.
