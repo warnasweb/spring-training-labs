@@ -26,7 +26,7 @@ public class GatewaySecurityConfig {
     return http.csrf(ServerHttpSecurity.CsrfSpec::disable)
         .cors(cors -> cors.configurationSource(corsConfigurationSource()))
         .authorizeExchange(auth -> auth
-            .pathMatchers("/auth/token", "/actuator/health/**", "/actuator/prometheus").permitAll()
+            .pathMatchers("/auth/token", "/actuator/health/**", "/actuator/prometheus", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
             .anyExchange().authenticated())
         .addFilterAt(gatewayJwtFilter, SecurityWebFiltersOrder.AUTHENTICATION)
         .build();
@@ -47,7 +47,7 @@ public class GatewaySecurityConfig {
   WebFilter gatewayJwtFilter(@Value("${security.jwt.secret}") String secret) {
     return (exchange, chain) -> {
       String path = exchange.getRequest().getPath().value();
-      if (path.equals("/auth/token") || path.startsWith("/actuator/health") || path.equals("/actuator/prometheus")) return chain.filter(exchange);
+      if (path.equals("/auth/token") || path.startsWith("/actuator/health") || path.equals("/actuator/prometheus") || path.startsWith("/v3/api-docs") || path.startsWith("/swagger-ui") || path.equals("/swagger-ui.html")) return chain.filter(exchange);
       String header = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
       if (header == null || !header.startsWith("Bearer ")) return unauthorized(exchange);
       try {
