@@ -26,7 +26,7 @@ public class ServiceSecurityConfig {
   SecurityFilterChain serviceSecurity(HttpSecurity http, ServiceJwtFilter jwt) throws Exception {
     return http.csrf(csrf -> csrf.disable())
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/actuator/health/**", "/actuator/prometheus").permitAll()
+            .requestMatchers("/actuator/health/**", "/actuator/prometheus", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
             .anyRequest().authenticated())
         .addFilterBefore(jwt, UsernamePasswordAuthenticationFilter.class)
         .build();
@@ -39,7 +39,7 @@ public class ServiceSecurityConfig {
     ServiceJwtFilter(String secret, String internalToken) { this.secret = secret; this.internalToken = internalToken; }
     @Override protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain chain) throws ServletException, IOException {
       String path = req.getRequestURI();
-      if (path.startsWith("/actuator/health") || path.equals("/actuator/prometheus")) { chain.doFilter(req, res); return; }
+      if (path.startsWith("/actuator/health") || path.equals("/actuator/prometheus") || path.startsWith("/v3/api-docs") || path.startsWith("/swagger-ui") || path.equals("/swagger-ui.html")) { chain.doFilter(req, res); return; }
       String internal = req.getHeader("X-Internal-Token");
       if (internalToken.equals(internal)) {
         SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken("internal-service", "n/a", java.util.List.of(new SimpleGrantedAuthority("ROLE_SERVICE"))));

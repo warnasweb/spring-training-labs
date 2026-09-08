@@ -161,3 +161,22 @@ Use `down -v` only when you intentionally want to delete the PostgreSQL and Kafk
 10. Explain why `order-service` uses `X-Internal-Token` for the scheduled Saga call to inventory.
 11. Open Eureka at `http://localhost:8861` and show all secured services registered.
 12. Discuss production replacements: OAuth2/OIDC provider, resource server JWT validation, mTLS, API gateway policy, secret rotation, and method-level authorization.
+
+
+## Final day: Swagger/OpenAPI and testing
+
+The final-day examples add Swagger/OpenAPI documentation and focused tests to the secured microservices lab. See `docs/swagger-openapi-testing.md` for the classroom flow.
+
+Useful local Swagger URLs after starting the apps:
+
+- Gateway: http://localhost:8180/swagger-ui.html
+- Product service: http://localhost:8181/swagger-ui.html
+- Inventory service: http://localhost:8182/swagger-ui.html
+- Order service: http://localhost:8183/swagger-ui.html
+
+Run the focused examples:
+
+```bash
+mvn -pl product-service -am test
+mvn -pl inventory-service -am test
+```
